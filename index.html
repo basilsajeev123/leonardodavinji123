@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <title>Sample App</title>
+</head>
+
+<body>
+  <h1>Sample App</h1>
+  <h3>Sensor Data 01</h3>
+  <p id='sensor01'>
+
+  </p>
+  <h3>Sensor Data 02</h3>
+  <p id='sensor02'>
+
+  </p>
+  <h3>Sensor Data 03</h3>
+  <p id='sensor03'>
+
+  </p>
+  <h3>Button</h3>
+  <p id='button_val'>
+  </p>
+  <button type="button" id='btn'>Button</button>
+
+  <script type="module">
+    var buttonVal,sensor_1,sensor_2,sensor_3;
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
+    import { getDatabase, ref, onValue, set } from 'https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js';
+    //Change the Firebase Config
+    const firebaseConfig = {
+
+apiKey: "AIzaSyAzk4lv3_Qio9jRq6td4nYvjBbeqpfEO_c",
+
+authDomain: "arduino-8d34d.firebaseapp.com",
+
+databaseURL: "https://arduino-8d34d-default-rtdb.firebaseio.com",
+
+projectId: "arduino-8d34d",
+
+storageBucket: "arduino-8d34d.appspot.com",
+
+messagingSenderId: "795886398276",
+
+appId: "1:795886398276:web:309c4d230340044180c511",
+
+measurementId: "G-C02ZTPCESF"
+
+};
+
+  
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase();
+    const data = ref(db, '/');
+    onValue(data, (snapshot) => {
+        const sensorData = snapshot.val();
+        document.getElementById('sensor01').innerText = sensorData.sensor1;
+        document.getElementById('sensor02').innerText = sensorData.sensor2;
+        document.getElementById('sensor03').innerText = sensorData.sensor3;
+        document.getElementById('button_val').innerText = sensorData.button;
+        buttonVal = sensorData.button;
+        sensor_1 = sensorData.sensor1
+        sensor_2 = sensorData.sensor2
+        sensor_3 = sensorData.sensor3
+    });
+    document.getElementById('btn').addEventListener('click',()=> {
+      console.log('OnClicked');
+      set(ref(db, '/'), {
+        button: (buttonVal == 'true')?'false':'true',
+        sensor1:sensor_1,
+        sensor2:0,
+        sensor3:0
+    });
+    })
+  </script>
+</body>
+
+</html>
